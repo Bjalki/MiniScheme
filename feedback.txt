@@ -1,0 +1,66 @@
+Testing initiated. Wed 19 Oct 2022 01:21:19 PM EDT
+Files submitted:
+AndExp.java
+ArithExp.java
+Assignment.java
+ASTNode.java
+BindSpec.java
+Body.java
+BoolCheckExp.java
+Bool.java
+Cond.java
+Definition.java
+Env.java
+EqvExp.java
+Exp.java
+feedback.txt
+IntCheckExp.java
+Int.java
+LessExp.java
+LetExp.java
+Line.java
+Literal.java
+MiniScheme1Constants.java
+MiniScheme1.java
+MiniScheme1.jj
+MiniScheme1TokenManager.java
+MiniScheme2Constants.java
+MiniScheme2.java
+MiniScheme2.jj
+MiniScheme2TokenManager.java
+MiniScheme3Constants.java
+MiniScheme3.java
+MiniScheme3.jj
+MiniScheme3TokenManager.java
+NewlineExpression.java
+NotExp.java
+OrExp.java
+ParseException.java
+Program.java
+ReadExpression.java
+README
+SimpleCharStream.java
+Token.java
+TokenMgrError.java
+ValEnv.java
+Variable.java
+WriteExpression.java
+==================================================
+Testing MiniScheme3 ...
+==================================================
+MiniScheme3.jj compilation successful.
+MiniScheme3.java compilation successful.
+:and-0: CORRECT!
+:boolean-all-0: CORRECT!
+:boolean-pred-0: CORRECT!
+:eqv-0: CORRECT!
+:if-0: CORRECT!
+:integer-pred-0: CORRECT!
+:less-than-0: CORRECT!
+:less-than-1st-arg-3: CORRECT!
+:less-than-2nd-arg-3: CORRECT!
+:less-than-both-args-3: CORRECT!
+:not-0: CORRECT!
+:or-0: CORRECT!
+:true-false-if-0: CORRECT!
+Testing completed. Wed 19 Oct 2022 01:21:21 PM EDT

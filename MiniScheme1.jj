@@ -1,0 +1,117 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(MiniScheme1)
+
+import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public class MiniScheme1
+{
+  public static Scanner in;
+  
+  public static void main(String args[]) throws ParseException
+  {
+    try {
+      MiniScheme1 parser = null;
+      in = new Scanner(System.in);
+      if (args.length > 0)
+      parser = new MiniScheme1(new FileInputStream(args[0]));
+      else
+      {
+        System.out.print("Program filename: ");
+        parser = new MiniScheme1(new FileInputStream(in.nextLine()));
+       }
+      Program p = parser.program();
+      p.eval(new Env());
+    }
+    catch (FileNotFoundException e)
+    {
+      System.out.println(e.getMessage());
+    }
+    catch (RuntimeException e)
+    {
+      System.out.println(e.getMessage());
+    }
+  }
+}
+
+PARSER_END(MiniScheme1)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < PLUS : "+" >
+| < MINUS : "-" >
+| < MULTIPLY : "*" >
+| < QUOTIENT : "quotient" >
+}
+
+TOKEN:
+{
+  < INTEGER : ("+" | "-")? (< DIGIT >)+>
+| < #DIGIT : [ "0"-"9" ] >
+}
+
+TOKEN:
+{
+  < READ : "read" >
+| < WRITE : "write" >
+| < NEWLINE : "newline" >
+}
+
+TOKEN:
+{
+  < IDENTIFIER : < INITIAL > (< SUBSEQUENT >)* >
+| < INITIAL : ["a"-"z", "!", "$", "%", "&", "*", "/", ":", "<", "=", ">", "?", "^", "_", "~"] >
+| < SUBSEQUENT: (< INITIAL > | < DIGIT > | ["+", "-", ".", "@"]) >
+}
+
+Program program() :
+{ Program p = new Program(); Exp e = null; }
+{
+  (e=exp() { p.lineList.add(e); })*
+  { return p; }
+}
+
+Exp exp() :
+{ Exp e = null; }
+{
+	(	      e=literal()
+		| e=derivedExpression()
+	)
+  { return e; }
+}
+
+Literal literal() :
+{ Literal l = null; String s = null; }
+{
+  < INTEGER > { s = token.image; l = new Int(s); }
+  { return l; }
+}
+
+Exp derivedExpression() :
+{ Token t = null; Exp e1 = null; Exp e2 = null; WriteExpression we = null; ArithExp ae = null; ReadExpression re = null; NewlineExpression nl; }
+{
+  "("
+  (    (< READ > { re = new ReadExpression(in); e1 = re; })
+    | (< WRITE > e1=exp() { we = new WriteExpression(e1); e1 = we; })
+    | (< NEWLINE > { nl = new NewlineExpression(); e1 = nl; })
+    | ((< PLUS > | < MINUS > | < MULTIPLY > | < QUOTIENT >) { t = token; } e1=exp() e2=exp() { ae = new ArithExp(t.image, e1, e2); e1 = ae; })
+  )
+  ")"
+  { return e1; }
+}
