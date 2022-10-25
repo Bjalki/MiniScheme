@@ -1,21 +1,18 @@
-import java.util.ArrayList;
-
 public class Pair extends Exp{
 
-    ArrayList<Exp> pair = new ArrayList<>();
+    Exp[] pair = {null, null};
 
     public Pair(Exp e1, Exp e2){
-        pair.add(e1);
-        pair.add(e2);
+        pair[0] = e1;
+        pair[1] = e2;
     }
     @Override
-    ValEnv eval(Env env) {
-        
-        return new ValEnv(pair, env); //I don't think this is right
+    ValEnv eval(Env env) {       
+        return new ValEnv(this, env); //I don't think this is right
     }
     @Override
     void print() {
-        System.out.println("(" + pair.get(0) + " . " + pair.get(1) + ")");
+        System.out.println("(" + pair[0] + " . " + pair[1] + ")");
 
     }
 }

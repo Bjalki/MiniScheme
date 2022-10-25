@@ -11,6 +11,7 @@ public class PairCheckExp extends Exp{
     ValEnv eval(Env env) {
         ValEnv ve = exp.eval(env);
 		Object value = ve.val;
+        System.out.println("test: " + value.getClass());
 		boolean result = value instanceof Pair;
 		return new ValEnv(result, ve.env);
     }
