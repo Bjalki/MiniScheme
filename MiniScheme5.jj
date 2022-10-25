@@ -1,0 +1,213 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(MiniScheme4)
+
+import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public class MiniScheme4
+{
+  public static Scanner in;
+  
+  public static void main(String args[]) throws ParseException
+  {
+    try {
+      MiniScheme4 parser = null;
+      in = new Scanner(System.in);
+      if (args.length > 0)
+      parser = new MiniScheme4(new FileInputStream(args[0]));
+      else
+      {
+        System.out.print("Program filename: ");
+        parser = new MiniScheme4(new FileInputStream(in.nextLine()));
+       }
+      Program p = parser.program();
+      p.eval(new Env());
+      //p.print();
+    }
+    catch (FileNotFoundException e)
+    {
+      System.out.println(e.getMessage());
+    }
+    catch (RuntimeException e)
+    {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+    }
+  }
+}
+
+PARSER_END(MiniScheme4)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < PLUS : "+" >
+| < MINUS : "-" >
+| < MULTIPLY : "*" >
+| < QUOTIENT : "quotient" >
+}
+
+TOKEN: /* NUMBERS */
+{
+  < INTEGER : ("+" | "-")? (< DIGIT >)+>
+| < #DIGIT : [ "0"-"9" ] >
+}
+
+TOKEN: /* BOOLEANS */
+{
+	< BOOLEAN : ("#f" | "#t") >
+}
+
+TOKEN: /* KEYWORDS */
+{
+  < READ : "read" >
+| < WRITE : "write" >
+| < NEWLINE : "newline" >
+| < DEFINE : "define" >
+| < LET : "let" >
+| < SET : "set!" >
+| < IF : "if" >
+| < AND : "and" >
+| < OR : "or" >
+| < NOT : "not" >
+| < EQV_CHECK : "eqv?" >
+| < LESS_THAN : "<" >
+| < INT_CHECK : "integer?" >
+| < BOOL_CHECK : "boolean?" >
+| < LAMBDA : "lambda" >
+| < PAIR_CHECK : "pair?" > 
+}
+
+TOKEN: /* IDENTIFIERS */
+{
+  < IDENTIFIER : < INITIAL > (< SUBSEQUENT >)* >
+| < INITIAL : ["a"-"z", "!", "$", "%", "&", "*", "/", ":", "<", "=", ">", "?", "^", "_", "~"] >
+| < SUBSEQUENT: (< INITIAL > | < DIGIT > | ["+", "-", ".", "@"]) >
+}
+
+Program program() :
+{ Program p = new Program(); Exp e = null; Definition d = null; }
+{
+  ( LOOKAHEAD(def()) d=def() { p.lineList.add(d); } | e=exp() { p.lineList.add(e); })*
+  { return p; }
+}
+
+Definition def() :
+{ Definition d = null; Variable var = null; Exp e = null; }
+{
+  "(" < DEFINE > var=variable() e=exp() ")" { d = new Definition(var, e); }
+  { return d; }
+}
+
+Exp exp() :
+{ Exp e = null; }
+{
+	(
+		  e=variable()
+	    | e=literal()
+	    | "(" (e=cond() | e=assign() | e=derivedExpression() | e=lambdaExp() | e=procCall()) ")"
+	)
+  { return e; }
+}
+
+Variable variable() :
+{ Variable var = null; String id = null; }
+{
+  < IDENTIFIER > { id = token.image; var = new Variable(id); }
+  { return var; }
+}
+
+Literal literal() :
+{ Literal l = null; String s = null; }
+{
+  (
+    < INTEGER > { s = token.image; l = new Int(s); }
+  | < BOOLEAN > { s = token.image; l = new Bool(s); }
+  )
+  { return l; }
+}
+
+Cond cond() :
+{ Cond c = null; Exp e1 = null; Exp e2 = null; Exp e3 = null; }
+{
+  < IF > e1=exp() e2=exp() (e3=exp())?
+  { c = new Cond(e1, e2, e3); return c; }
+}
+
+Assignment assign() :
+{ Assignment a = null; Variable var = null; Exp e = null; }
+{
+  < SET > var=variable() e=exp() { a = new Assignment(var, e); }
+  { return a; }
+}
+
+Exp derivedExpression() :
+{ Token t = null; Exp e1 = null; Exp e2 = null;
+  WriteExpression we = null; ArithExp ae = null;
+  ReadExpression re = null; NewlineExpression nl = null;
+  LetExp le = null; BindSpec bi = null; Body bod = null;
+  AndExp andE = null; OrExp orE = null;}
+{
+  (
+    (< READ > { re = new ReadExpression(in); e1 = re; })
+  | (< WRITE > e1=exp() { we = new WriteExpression(e1); e1 = we; })
+  | (< NEWLINE > { nl = new NewlineExpression(); e1 = nl; })
+  | ((< PLUS > | < MINUS > | < MULTIPLY > | < QUOTIENT >) { t = token; } e1=exp() e2=exp() { ae = new ArithExp(t.image, e1, e2); e1 = ae; })
+  | (< LET > { le = new LetExp(); }"(" ( bi=bindSpec() { le.binds.add(bi); })* ")" bod=body() { le.body = bod; e1=le; })
+  | (< AND > { andE = new AndExp(); } (e1=exp() { andE.expList.add(e1); })* { e1 = andE; })
+  | (< OR > { orE = new OrExp(); } (e1=exp() { orE.expList.add(e1); })* { e1 = orE; })
+  | (< NOT > e1=exp() { e1 = new NotExp(e1); })
+  | (< EQV_CHECK > e1=exp() e2=exp() { e1 = new EqvExp(e1, e2); })
+  | (< LESS_THAN > e1=exp() e2=exp() { e1 = new LessExp(e1, e2); })
+  | (< INT_CHECK > e1=exp() { e1 = new IntCheckExp(e1); })
+  | (< BOOL_CHECK > e1=exp() { e1 = new BoolCheckExp(e1); })
+  | (< PAIR_CHECK > e1=exp() { e1 = new PairCheckExp(e1); })
+  )
+  { return e1; }
+}
+
+BindSpec bindSpec() :
+{ Variable var = null; Exp e = null; }
+{
+  "(" var=variable() e=exp() ")"
+  { return new BindSpec(var, e); }
+}
+
+Body body() :
+{ Body bod = new Body(); Definition def = null; Exp exp = null; }
+{
+  (
+    (LOOKAHEAD(def()) def=def() { bod.lines.add(def); })*
+    (exp=exp() { bod.lines.add(exp); })+
+  )
+  { return bod; }
+}
+
+LambdaExp lambdaExp() :
+{ LambdaExp l = new LambdaExp(); Variable v = null; Body b = null;}
+{
+  < LAMBDA > "(" (v=variable() { l.varList.add(v); })* ")" b=body() { l.body = b; }
+  { return l; }
+}
+
+ProcCall procCall() :
+{ ProcCall p = new ProcCall(); Exp e = null; }
+{
+  (e=exp() { p.expList.add(e); })+
+  { return p; }
+}
