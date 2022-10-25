@@ -1,9 +1,12 @@
-public class Closure {
-    ValEnv env;
-    LambdaExpression node;
 
-    public Closure(ValEnv ve, LambdaExpression exp){
-        env = ve;
-        node = exp;
-    }
+public class Closure {
+	
+	LambdaExp lambda;
+	Env env;
+	
+	public Closure(LambdaExp lambda, Env env) {
+		this.lambda = lambda;
+		this.env = env;
+	}
+
 }

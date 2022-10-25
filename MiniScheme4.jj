@@ -89,7 +89,7 @@ TOKEN: /* KEYWORDS */
 | < LESS_THAN : "<" >
 | < INT_CHECK : "integer?" >
 | < BOOL_CHECK : "boolean?" >
-| < LAMBDA : "lambda:" >
+| < LAMBDA : "lambda" >
 }
 
 TOKEN: /* IDENTIFIERS */
@@ -162,7 +162,8 @@ Exp derivedExpression() :
   LetExp le = null; BindSpec bi = null; Body bod = null;
   AndExp andE = null; OrExp orE = null;}
 {
-  (< READ > { re = new ReadExpression(in); e1 = re; })
+  (
+    (< READ > { re = new ReadExpression(in); e1 = re; })
   | (< WRITE > e1=exp() { we = new WriteExpression(e1); e1 = we; })
   | (< NEWLINE > { nl = new NewlineExpression(); e1 = nl; })
   | ((< PLUS > | < MINUS > | < MULTIPLY > | < QUOTIENT >) { t = token; } e1=exp() e2=exp() { ae = new ArithExp(t.image, e1, e2); e1 = ae; })
@@ -174,6 +175,7 @@ Exp derivedExpression() :
   | (< LESS_THAN > e1=exp() e2=exp() { e1 = new LessExp(e1, e2); })
   | (< INT_CHECK > e1=exp() { e1 = new IntCheckExp(e1); })
   | (< BOOL_CHECK > e1=exp() { e1 = new BoolCheckExp(e1); })
+  )
   { return e1; }
 }
 
