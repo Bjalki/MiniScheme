@@ -6,27 +6,27 @@ options
   static = true;
 }
 
-PARSER_BEGIN(MiniScheme4)
+PARSER_BEGIN(MiniScheme5)
 
 import java.util.Scanner;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class MiniScheme4
+public class MiniScheme5
 {
   public static Scanner in;
   
   public static void main(String args[]) throws ParseException
   {
     try {
-      MiniScheme4 parser = null;
+      MiniScheme5 parser = null;
       in = new Scanner(System.in);
       if (args.length > 0)
-      parser = new MiniScheme4(new FileInputStream(args[0]));
+      parser = new MiniScheme5(new FileInputStream(args[0]));
       else
       {
         System.out.print("Program filename: ");
-        parser = new MiniScheme4(new FileInputStream(in.nextLine()));
+        parser = new MiniScheme5(new FileInputStream(in.nextLine()));
        }
       Program p = parser.program();
       p.eval(new Env());
@@ -44,7 +44,7 @@ public class MiniScheme4
   }
 }
 
-PARSER_END(MiniScheme4)
+PARSER_END(MiniScheme5)
 
 SKIP :
 {
@@ -91,6 +91,7 @@ TOKEN: /* KEYWORDS */
 | < BOOL_CHECK : "boolean?" >
 | < LAMBDA : "lambda" >
 | < PAIR_CHECK : "pair?" > 
+| < CONS_PAIR : "cons" >
 }
 
 TOKEN: /* IDENTIFIERS */
@@ -177,6 +178,7 @@ Exp derivedExpression() :
   | (< INT_CHECK > e1=exp() { e1 = new IntCheckExp(e1); })
   | (< BOOL_CHECK > e1=exp() { e1 = new BoolCheckExp(e1); })
   | (< PAIR_CHECK > e1=exp() { e1 = new PairCheckExp(e1); })
+  | (< CONS_PAIR > e1=exp() e2=exp() {e1 = new Pair(e1, e2); })
   )
   { return e1; }
 }
