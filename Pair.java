@@ -1,6 +1,7 @@
 public class Pair extends Exp{
 
     Exp[] pair = {null, null};
+    public static Pair NULL = new Pair(null, null);
 
     public Pair(Exp e1, Exp e2){
         pair[0] = e1;
