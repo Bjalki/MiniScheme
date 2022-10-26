@@ -57,11 +57,15 @@ public interface MiniScheme5Constants {
   /** RegularExpression Id. */
   int CONS_PAIR = 28;
   /** RegularExpression Id. */
-  int IDENTIFIER = 29;
+  int CONS_LIST = 29;
   /** RegularExpression Id. */
-  int INITIAL = 30;
+  int NULL_CHECK = 30;
   /** RegularExpression Id. */
-  int SUBSEQUENT = 31;
+  int IDENTIFIER = 31;
+  /** RegularExpression Id. */
+  int INITIAL = 32;
+  /** RegularExpression Id. */
+  int SUBSEQUENT = 33;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -97,6 +101,8 @@ public interface MiniScheme5Constants {
     "\"lambda\"",
     "\"pair?\"",
     "\"cons\"",
+    "\"list\"",
+    "\"null?\"",
     "<IDENTIFIER>",
     "<INITIAL>",
     "<SUBSEQUENT>",

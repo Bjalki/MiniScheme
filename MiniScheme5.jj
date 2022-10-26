@@ -92,6 +92,8 @@ TOKEN: /* KEYWORDS */
 | < LAMBDA : "lambda" >
 | < PAIR_CHECK : "pair?" > 
 | < CONS_PAIR : "cons" >
+| < CONS_LIST : "list" >
+| < NULL_CHECK : "null?" >
 }
 
 TOKEN: /* IDENTIFIERS */
@@ -162,7 +164,7 @@ Exp derivedExpression() :
   WriteExpression we = null; ArithExp ae = null;
   ReadExpression re = null; NewlineExpression nl = null;
   LetExp le = null; BindSpec bi = null; Body bod = null;
-  AndExp andE = null; OrExp orE = null;}
+  AndExp andE = null; OrExp orE = null; List lst = null;}
 {
   (
     (< READ > { re = new ReadExpression(in); e1 = re; })
@@ -179,6 +181,8 @@ Exp derivedExpression() :
   | (< BOOL_CHECK > e1=exp() { e1 = new BoolCheckExp(e1); })
   | (< PAIR_CHECK > e1=exp() { e1 = new PairCheckExp(e1); })
   | (< CONS_PAIR > e1=exp() e2=exp() {e1 = new Pair(e1, e2); })
+  | (< CONS_LIST > { lst = new List(); } (e1=exp() { lst.addList(e1); })* {e1=lst;})
+  | (< NULL_CHECK > e1=exp() { e1 = new NullCheckExp(e1); })
   )
   { return e1; }
 }
