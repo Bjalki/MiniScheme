@@ -14,8 +14,8 @@ public class List extends Exp{
         if (addList.isEmpty()){
             p = Pair.NULL;
         }else{
-            p = new Pair(addList.get(addList.size()-1), null);
-            for (int i = addList.size() -2; i>= 0; i--){
+            p =Pair.NULL;
+            for (int i = addList.size() -1; i>= 0; i--){
                 p = new Pair(addList.get(i), p);
             }
         

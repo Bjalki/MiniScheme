@@ -1,2 +1,5 @@
 (write (if (pair? (cons 1 2)) 1 0))
+(newline)
 (write (if (null? (list    )) 1 0))
+(newline)
+(write (if (pair? (list 1 2 3 4 5)) 1 0))
