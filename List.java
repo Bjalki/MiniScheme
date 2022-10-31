@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class List extends Exp{
 
     public ArrayList<Exp> addList;
+    public Pair p = Pair.NULL;
 
     public List(){
         addList = new ArrayList<>();
@@ -10,15 +11,12 @@ public class List extends Exp{
 
     @Override
     ValEnv eval(Env env) {
-       Pair p;
         if (addList.isEmpty()){
             p = Pair.NULL;
         }else{
-            p =Pair.NULL;
             for (int i = addList.size() -1; i>= 0; i--){
                 p = new Pair(addList.get(i), p);
-            }
-        
+            }       
         }
         return new ValEnv(p, env);
     }

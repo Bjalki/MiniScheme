@@ -1,6 +1,7 @@
 public class Pair extends Exp{
 
-    Exp[] pair = {null, null};
+    public Exp[] pair = {null, null};
+
 
     public static Pair NULL = new Pair(null, null);
 

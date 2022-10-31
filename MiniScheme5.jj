@@ -94,6 +94,9 @@ TOKEN: /* KEYWORDS */
 | < CONS_PAIR : "cons" >
 | < CONS_LIST : "list" >
 | < NULL_CHECK : "null?" >
+| < CAR : "car" >
+| < CDR : "cdr" >
+| < SET_CAR : "set-car!" >
 }
 
 TOKEN: /* IDENTIFIERS */
@@ -183,6 +186,9 @@ Exp derivedExpression() :
   | (< CONS_PAIR > e1=exp() e2=exp() {e1 = new Pair(e1, e2); })
   | (< CONS_LIST > { lst = new List(); } (e1=exp() { lst.addList(e1); })* {e1=lst;})
   | (< NULL_CHECK > e1=exp() { e1 = new NullCheckExp(e1); })
+  | (< CAR > e1=exp() { e1 = new CarExp(e1); })
+  | (< CDR > e1=exp() { e1 = new CdrExp(e1); })
+  | (< SET_CAR > e1=exp() e2=exp(){ e1 = new SetCarExp(e1, e2);}) 
   )
   { return e1; }
 }
