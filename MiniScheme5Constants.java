@@ -63,11 +63,15 @@ public interface MiniScheme5Constants {
   /** RegularExpression Id. */
   int CAR = 31;
   /** RegularExpression Id. */
-  int IDENTIFIER = 32;
+  int CDR = 32;
   /** RegularExpression Id. */
-  int INITIAL = 33;
+  int SET_CAR = 33;
   /** RegularExpression Id. */
-  int SUBSEQUENT = 34;
+  int IDENTIFIER = 34;
+  /** RegularExpression Id. */
+  int INITIAL = 35;
+  /** RegularExpression Id. */
+  int SUBSEQUENT = 36;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -106,6 +110,8 @@ public interface MiniScheme5Constants {
     "\"list\"",
     "\"null?\"",
     "\"car\"",
+    "\"cdr\"",
+    "\"set-car!\"",
     "<IDENTIFIER>",
     "<INITIAL>",
     "<SUBSEQUENT>",
